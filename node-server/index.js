@@ -4,10 +4,10 @@ const mongoose = require("mongoose");
 
 const config = require("./config");
 
-mongoose.connect(config.DATABASE, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-});
+// mongoose.connect(config.DATABASE, {
+//   useUnifiedTopology: true,
+//   useNewUrlParser: true,
+// });
 
 const server = app.listen(config.PORT, () => {
   console.log("Connected on Port: " + config.PORT);
@@ -35,4 +35,18 @@ app.get("/", (req, res) => {
   res.json({
     msg: "Yellowww !",
   });
+});
+
+var Redis = require("ioredis");
+var redis = new Redis();
+// var pub = new Redis();
+
+redis.subscribe("laravel_database_private-create_room");
+
+redis.on("message", function (channel, message) {
+  // Receive message Hello world! from channel news
+  // Receive message Hello again! from channel music
+  // console.log("Receive message %s from channel %s", message, channel);
+  data = JSON.parse(message)["data"];
+  console.log(data);
 });
